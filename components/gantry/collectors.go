@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	pb "go.viam.com/api/component/gantry/v1"
 	"google.golang.org/protobuf/types/known/anypb"
 
 	"go.viam.com/rdk/data"
@@ -47,14 +48,11 @@ func newPositionCollector(resource interface{}, params data.CollectorParams) (da
 			}
 			return nil, data.FailedToReadErr(params.ComponentName, position.String(), err)
 		}
-		return Position{Position: v}, nil
+		return pb.GetPositionResponse{
+			PositionsMm: scaleMetersToMm(v),
+		}, nil
 	})
 	return data.NewCollector(cFunc, params)
-}
-
-// Lengths wraps the returns lengths values.
-type Lengths struct {
-	Lengths []float64
 }
 
 func newLengthsCollector(resource interface{}, params data.CollectorParams) (data.Collector, error) {
@@ -73,9 +71,19 @@ func newLengthsCollector(resource interface{}, params data.CollectorParams) (dat
 			}
 			return nil, data.FailedToReadErr(params.ComponentName, lengths.String(), err)
 		}
-		return Lengths{Lengths: v}, nil
+		return pb.GetLengthsResponse{
+			LengthsMm: scaleMetersToMm(v),
+		}, nil
 	})
 	return data.NewCollector(cFunc, params)
+}
+
+func scaleMetersToMm(meters []float64) []float64 {
+	ret := make([]float64, len(meters))
+	for i := range ret {
+		ret[i] = meters[i] * 1000
+	}
+	return ret
 }
 
 func assertGantry(resource interface{}) (Gantry, error) {
