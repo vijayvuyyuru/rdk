@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"os"
 	"time"
 
 	"github.com/golang/geo/r3"
@@ -22,8 +23,8 @@ import (
 var model = resource.DefaultModelFamily.WithModel("fake")
 
 const (
-	initialWidth  = 1280
-	initialHeight = 720
+	initialWidth  = 500
+	initialHeight = 750
 )
 
 func init() {
@@ -211,6 +212,14 @@ func (c *Camera) Read(ctx context.Context) (image.Image, func(), error) {
 	if !c.Animated {
 		c.cacheImage = img
 	}
+
+	f, err := os.Open("/Users/vijayvuyyuru/Downloads/towers.jpeg")
+	if err != nil {
+		return nil, nil, err
+	}
+	defer f.Close()
+	image, _, _ := image.Decode(f)
+	return image, func() {}, nil
 	return rimage.ConvertImage(img), func() {}, nil
 }
 
