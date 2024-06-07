@@ -63,6 +63,9 @@ var defaultMaxCaptureSize = int64(256 * 1024)
 // Default time between disk size checks.
 var filesystemPollInterval = 30 * time.Second
 
+// Threshold number of files to check if sync is backed up (defined as >5000 files).
+var minNumFiles = 5000
+
 var (
 	clock          = clk.New()
 	deletionTicker = clk.New()
