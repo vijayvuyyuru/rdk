@@ -2689,6 +2689,16 @@ Note: There is no progress meter while copying is in progress.
 							Action: createActionCommandWithT[robotsPartStatusArgs](RobotsPartStatusAction),
 						},
 						{
+							Name:      "history",
+							Usage:     "display configuration history for a machine part",
+							UsageText: createUsageText("machines part history", []string{generalFlagPart}, true, false),
+							Flags: append(commonPartFlags, &cli.StringFlag{
+								Name:  "filter-by-email",
+								Usage: "show only history entries saved by this email address",
+							}),
+							Action: createActionCommandWithT[machinesPartHistoryArgs](machinesPartHistoryAction),
+						},
+						{
 							Name:      "logs",
 							Aliases:   []string{"log"},
 							Usage:     "display part logs",
