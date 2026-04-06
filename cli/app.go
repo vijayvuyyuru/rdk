@@ -1078,6 +1078,69 @@ Note: There is no progress meter while copying is in progress.
 						},
 					},
 				},
+				{
+					Name: "firebase-config",
+					Usage: "manage Firebase configurations for push notifications " +
+						"(organization owner only)",
+					UsageText:       createUsageText("organizations firebase-config", nil, false, true),
+					HideHelpCommand: true,
+					Commands: []*cli.Command{
+						{
+							Name:  "set",
+							Usage: "upload a Firebase config JSON for a specific app ID",
+							UsageText: createUsageText("organizations firebase-config set",
+								[]string{generalFlagOrgID, "app-id", firebaseConfigFlagPath}, false, false),
+							Flags: []cli.Flag{
+								&cli.StringFlag{
+									Name:  generalFlagOrgID,
+									Usage: "organization ID",
+								},
+								&cli.StringFlag{
+									Name:     "app-id",
+									Required: true,
+									Usage:    "app ID (e.g., com.example.myapp)",
+								},
+								&cli.StringFlag{
+									Name:     firebaseConfigFlagPath,
+									Required: true,
+									Usage:    "path to the Firebase config JSON file",
+								},
+							},
+							Action: createActionCommandWithT[setFirebaseConfigArgs](SetFirebaseConfigAction),
+						},
+						{
+							Name:  "read",
+							Usage: "read Firebase config metadata for an organization",
+							UsageText: createUsageText("organizations firebase-config read",
+								[]string{generalFlagOrgID}, false, false),
+							Flags: []cli.Flag{
+								&cli.StringFlag{
+									Name:  generalFlagOrgID,
+									Usage: "organization ID",
+								},
+							},
+							Action: createActionCommandWithT[readFirebaseConfigArgs](ReadFirebaseConfigAction),
+						},
+						{
+							Name:  "delete",
+							Usage: "delete a Firebase config for a specific app ID",
+							UsageText: createUsageText("organizations firebase-config delete",
+								[]string{generalFlagOrgID, "app-id"}, false, false),
+							Flags: []cli.Flag{
+								&cli.StringFlag{
+									Name:  generalFlagOrgID,
+									Usage: "organization ID",
+								},
+								&cli.StringFlag{
+									Name:     "app-id",
+									Required: true,
+									Usage:    "app ID (e.g., com.example.myapp)",
+								},
+							},
+							Action: createActionCommandWithT[deleteFirebaseConfigArgs](DeleteFirebaseConfigAction),
+						},
+					},
+				},
 			},
 		},
 		{
