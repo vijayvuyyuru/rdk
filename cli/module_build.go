@@ -1170,6 +1170,10 @@ func reloadModuleActionInner(
 	pm := NewProgressManager(allSteps, WithProgressOutput(!args.NoProgress))
 	defer pm.Stop()
 
+	if len(args.PartID) == 0 && !args.NoProgress {
+		printf(cmd.Root().ErrWriter, "Reloading to the machine configured at %s", args.CloudConfig)
+	}
+
 	var needsRestart bool
 	var buildPath string
 	var buildInfo *moduleCloudBuildInfo
@@ -1418,7 +1422,8 @@ func resolvePartID(partIDFromFlag, cloudJSON string) (string, error) {
 	}
 	conf, err := config.ReadLocalConfig(cloudJSON, logging.NewLogger("config"))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("did not receive part ID and no cloud config found at %s. "+
+			"Provide --part-id or run this on a machine where viam-server has stored its cloud config", cloudJSON)
 	}
 	if conf.Cloud == nil {
 		return "", fmt.Errorf("unknown failure opening viam.json at: %s", cloudJSON)
